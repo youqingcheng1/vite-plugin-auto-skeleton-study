@@ -1,0 +1,42 @@
+{
+  "name": "vite-plugin-auto-skeleton",
+  "version": "1.0.2",
+  "description": "vite web skeleton",
+  "main": "src/client/inject.ts",
+  "scripts": {
+    "build:es6": "tsc --module es6 --target es2015 --outDir dist/es6",
+    "build:cjs": "tsc --module commonjs --target es5 --outDir dist/cjs"
+  },
+  "files": [
+    "src",
+    "dist/es6",
+    "dist/cjs"
+  ],
+  "exports": {
+    "./skeleton.scss": "./src/style/skeleton.scss",
+    "./vitePlugin": {
+      "types": "./dist/es6/plugins/vitePlugin.d.ts",
+      "import": "./dist/es6/plugins/vitePlugin.js",
+      "require": "./dist/cjs/plugins/vitePlugin.js"
+    },
+    "./client": {
+      "types": "./dist/es6/client/index.d.ts",
+      "import": "./dist/es6/client/index.js",
+      "require": "./dist/cjs/client/index.js"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jquery": "^3.5.14",
+    "@vitejs/plugin-vue": "^3.1.2",
+    "body-parser": "^1.20.0",
+    "fs-extra": "^10.1.0",
+    "jquery": "^3.6.1",
+    "postcss": "^8.4.16",
+    "sass": "^1.58.3",
+    "scss": "^0.2.4",
+    "vite": "^4.1.4"
+  }
+}
