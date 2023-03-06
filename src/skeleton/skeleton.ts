@@ -184,6 +184,7 @@ function preset(config: SkeletonConfig) {
   ignore && $(ignore).attr(KEY, IGNORE)
 }
 
+// 传入节点，输出装换后的骨架屏代码
 export function renderSkeleton(sel: string, config: SkeletonConfig) {
   let $root = $(sel).eq(0)
   $root.addClass("sk")

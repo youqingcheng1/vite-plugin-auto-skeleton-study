@@ -1,4 +1,4 @@
-import {Plugin} from 'vite'
+import {Plugin, ViteDevServer} from 'vite'
 
 // @ts-ignore
 import bodyParser from 'body-parser'
@@ -16,14 +16,17 @@ export function SkeletonPlaceholderPlugin() {
     name: 'skeleton-placeholder-plugin',
     enforce: 'pre',
     transform(src: string, id: string) {
+      // src 源码， id 文件
       if (/\.vue$/.test(id)) {
         let file: Record<any, any>
         try {
+          // 解析骨架屏代码为对象
           file = fs.readJsonSync(filename) || {}
         } catch (e) {
           file = {}
         }
         // 约定对应的骨架屏占位符
+        // String.replace => 1. 直接替换 2. 参数n2为函数，函数回参是匹配的值
         let code = src.replace(/__SKELETON_(.*?)_CONTENT__/gm, function (match) {
           const record = file[match] || {}
           return record.content || ''
@@ -31,6 +34,7 @@ export function SkeletonPlaceholderPlugin() {
 
         return {
           code,
+          map: null // 如果可行将提供 source map
         }
       }
       return src
@@ -64,7 +68,7 @@ export function SkeletonApiPlugin() {
 
   return {
     name: 'skeleton-api-plugin',
-    configureServer(server: any) {
+    configureServer(server: ViteDevServer) {
       server.middlewares.use(bodyParser())
       server.middlewares.use('/update_skeleton', async (req: any, res: any, next: any) => {
         const {name, content = '', pathname} = req.body
@@ -75,7 +79,10 @@ export function SkeletonApiPlugin() {
       })
     },
     transform(src: string, id: string) {
-      const {query} = parseVueRequest(id)
+      // 返回文件名（完整路径）, query 文件带的参数 { vue: true, type: 'style', index: 0, 'lang.scss': '' }
+      const {filename, query} = parseVueRequest(id)
+      console.log(filename)
+      console.log(query)
 
       if (query.type === 'style') {
         // @ts-ignore
@@ -83,6 +90,7 @@ export function SkeletonApiPlugin() {
         if (!skeleton) {
           return src
         }
+        //vue-loader、 @vitejs/plugin-vue等工具解析SFC文件时，会为对应组件生成scopeId
         const name = `__SKELETON_${skeleton}_CONTENT__`.toLowerCase()
         const result = postcss([cssSkeletonGroupPlugin({wrapSelector: `.${name}`})]).process(src)
         return result.css

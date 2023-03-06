@@ -38,5 +38,8 @@
     "sass": "^1.58.3",
     "scss": "^0.2.4",
     "vite": "^4.1.4"
+  },
+  "devDependencies": {
+    "vite-plugin-inspect": "^0.7.15"
   }
 }

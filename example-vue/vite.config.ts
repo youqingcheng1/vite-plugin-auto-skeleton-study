@@ -1,5 +1,6 @@
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue'
+import Inspect from 'vite-plugin-inspect'
 
 
 // @ts-ignore
@@ -12,6 +13,7 @@ export default defineConfig({
     SkeletonPlaceholderPlugin(),
     vue(),
     SkeletonApiPlugin(),
+    Inspect() as any
   ],
   build: {
     cssCodeSplit: false
